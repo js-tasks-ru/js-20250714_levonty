@@ -6,21 +6,18 @@
 export function createGetter(path) {
 	return function(obj) {
 		const pathArr = path.split('.');
-		const lastKey = pathArr.pop();
-		let lastObj = pathArr.reduce((acc,index)=>{
-			if (acc.hasOwnProperty(index)) {
-				return acc[index];
-			} else {
-				return false;
-			}
-		
-		},obj);
-		
-		if (lastObj) {
-			if (lastObj.hasOwnProperty(lastKey)) {
-				return lastObj[lastKey];
+
+		for (const key of pathArr) {
+			if (key in obj) {
+				if (typeof obj[key]==='object' && obj[key]!==null) {
+					if (obj.hasOwnProperty(key)) {
+						obj = obj[key];
+						continue;
+					} 
+				} else {
+					if (obj.hasOwnProperty(key)) return obj[key];
+				}
 			} 
 		}
-		return;
 	}
 }
