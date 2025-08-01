@@ -1,24 +1,56 @@
 export default class SortableTable {
   constructor(headerConfig = [], data = []) {
-	this.headerConfig = headerConfig;
+	this.header = headerConfig;
 	this.data = data;
-	this.element = this.createTable();
+	this.element = this.createTableElement();
+	this.subElements = {
+		body: this.element.querySelector('[data-element="body"]'),
+		header: this.element.querySelector('[data-element="header"]')
+	  };
 
   }
-  
-  createTableHeader() {
-	  let headerRow = this.headerConfig.map(item => (`<div class="sortable-table__cell" data-id="${item.id}" data-sortable="${item.sortable}">
+ 
+  createTableHeaderElement() {
+	  const headerRow = this.header.map(item => (`<div class="sortable-table__cell" data-id="${item.id}" data-sortable="${item.sortable}">
         <span>${item.title}</span>
       </div>`)).join('');
-	  let headerRowWrapper = `<div data-element="header" class="sortable-table__header sortable-table__row">${headerRow}</div>`;
-	  return headerRowWrapper;
+	  return `<div data-element="header" class="sortable-table__header sortable-table__row">${headerRow}</div>`;
   }
   
-  createTable() {
+
+  
+  createTableBodyElement() {
+	  const tableBody = this.data.map(item => this.createRowElement(item)).join('');
+	  //return `<div data-element="body" class="sortable-table__body">${tableBody}</div>`;
+	  return tableBody;
+  }
+  
+  
+  
+	createRowElement(item) {
+	  
+		const row = this.header.map(col => this.createCellElement(item,col)).join('');
+		return `<a href="#" class="sortable-table__row">${row}</a>`;
+	}
+
+  
+	createCellElement(item, column) {
+		//console.log(typeof item[column['id']]);
+		
+		if (typeof item[column['id']]==='object') return `
+          <div class="sortable-table__cell">
+            <img class="sortable-table-image" alt="Image" src="${this.data[0]?.url || 'https://via.placeholder.com/32'}">
+          </div>
+        `;
+		return `<div class="sortable-table__cell">${item[column['id']]}</div>`;
+	}
+  
+	createTableElement() {
+		
 		const tableWrapper = `<div data-element="productsContainer" class="products-list__container">
 								<div class="sortable-table">
-									${this.createTableHeader()}
-									${this.createTableBody()}
+									${this.createTableHeaderElement()}
+									<div data-element="body" class="sortable-table__body">${this.createTableBodyElement()}</div>
 									
 									<div data-element="loading" class="loading-line sortable-table__loading-line"></div>
 
@@ -33,38 +65,18 @@ export default class SortableTable {
 		const table = document.createElement('tbl');
 			
 		table.innerHTML = tableWrapper;
-		return table.firstElementChild;
-  }
-  
-  createTableBody() {
-
-	  let tableRows = (this.data).map(item => (`<a href="#" class="sortable-table__row">
-        <div class="sortable-table__cell">
-  <img class="sortable-table-image" alt="Image" src="${item['images']?.[0]['url']||'https://via.placeholder.com/32'}"></div>
-        <div class="sortable-table__cell">${item['title']}</div>
-
-        <div class="sortable-table__cell">${item['quantity']}</div>
-        <div class="sortable-table__cell">${item['price']}</div>
-        <div class="sortable-table__cell">${item['sales']}</div>
-      </a>`)).join('');
-	  const tableBodyWrapper = `<div data-element="body" class="sortable-table__body">${tableRows}</div>`;
-
-		return tableBodyWrapper;
-  }
-  
-  destroy() {
-	  this.element.remove();
-  }
-  
-  sort(field, order) {
+		return table.firstElementChild;		
+		
+	}
+	
+	sort(field, order) {
 	  let sortType = null;
 	  let sorted;
 	  let sortDir = order=='asc' ? 1 : -1;
 
-	  for (let obj of this.headerConfig) {
+	  for (let obj of this.header) {
 		  if (obj['id']==field) {
-			  //if(obj['sortType']=='string') console.log('Will be sorted as string');
-			  //if(obj['sortType']=='number') console.log('Will be sorted as number');
+
 			  sortType = obj['sortType'];
 			  if (sortType == 'number') {
 				  this.data.sort((rowA, rowB)=>sortDir * (Number(rowA[field])-Number(rowB[field])));
@@ -80,28 +92,19 @@ export default class SortableTable {
 		  }
 	  }
 	  
-	  //console.log(this.data);
-	  console.log(this.createTableBody());
 
-	  let tblBody = document.querySelector('[data-element="body"]');
-	  tblBody.remove();
-	  //tblBody.innerHTML = this.createTableBody();
-
-	  
-	  let newTblBody = document.createElement('newTblBody');
-	  newTblBody.innerHTML = this.createTableBody();
-	  
-	  let tblHeader = document.querySelector('[data-element="header"]');
-	  tblHeader.after(newTblBody.firstElementChild);
-	  
+	  const oldTableBody = document.querySelector('[data-element="body"]');
+	  oldTableBody.innerHTML = this.createTableBodyElement();
 	  this.subElements = {
-		body: this.element.querySelector('[data-element="body"]')
-	  };
-  //*this.subElements.body.innerHTML = this.createTableBody();
-  
- // return this.element;
+	  body: document.querySelector('[data-element="body"]')
+	};
+
 	  
-			
+  }	
+  
+    destroy() {
+	  this.element.remove();
   }
+  
 }
 
