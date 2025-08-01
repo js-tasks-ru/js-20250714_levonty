@@ -6,7 +6,7 @@ export default class SortableTable {
 	this.subElements = {
 		body: this.element.querySelector('[data-element="body"]'),
 		header: this.element.querySelector('[data-element="header"]')
-	  };
+	};
 
   }
  
@@ -21,7 +21,6 @@ export default class SortableTable {
   
   createTableBodyElement() {
 	  const tableBody = this.data.map(item => this.createRowElement(item)).join('');
-	  //return `<div data-element="body" class="sortable-table__body">${tableBody}</div>`;
 	  return tableBody;
   }
   
@@ -95,10 +94,6 @@ export default class SortableTable {
 
 	  const oldTableBody = document.querySelector('[data-element="body"]');
 	  oldTableBody.innerHTML = this.createTableBodyElement();
-	  this.subElements = {
-	  body: document.querySelector('[data-element="body"]')
-	};
-
 	  
   }	
   

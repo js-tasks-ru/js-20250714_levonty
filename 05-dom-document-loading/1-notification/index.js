@@ -1,6 +1,6 @@
 export default class NotificationMessage {
 	
-	static isMsgShown = false;
+	static activeNotification = null;
 	
 	constructor(msg = '', {duration = 1000, type = 'success'} = {}) {
 		this.msg = msg;
@@ -21,7 +21,7 @@ export default class NotificationMessage {
 	
 	msgTemplate() {
 		return `
-			<div class="notification ${this.type}" style="--value:20s">
+			<div class="notification ${this.type}" style="--value:${this.duration/1000}s">
 				<div class="timer"></div>
 				<div class="inner-wrapper">
 				  <div class="notification-header">${this.type}</div>
@@ -35,12 +35,14 @@ export default class NotificationMessage {
 	
 	remove() {
 		this.element.remove();
-		NotificationMessage.isMsgShown = false;
 	}
 	
 	destroy() {
-		this.element.remove();
-		NotificationMessage.isMsgShown = false;
+		this.remove();
+		clearTimeout(this.timerId);
+		if (NotificationMessage.activeNotification === this) {
+		  NotificationMessage.activeNotification = null;
+		}
 	}
 	
 	checkMsgType(type) {
@@ -53,21 +55,16 @@ export default class NotificationMessage {
 	}
 	
 	show(node = document.body) {
-		let parentNode;
-
-		if (NotificationMessage.isMsgShown) return;
 		
-		if (typeof (node)=== 'string') {
-			parentNode = document.querySelector(node);
-
-		} else {
-			parentNode = node;		
+		if (NotificationMessage.activeNotification) {
+		  NotificationMessage.activeNotification.destroy();
 		}
-			
-		parentNode.append(this.element);
 
-		NotificationMessage.isMsgShown = true;
-		setTimeout(() => {
+		node.append(this.element);
+
+		NotificationMessage.activeNotification = this;
+		
+		this.timerId = setTimeout(() => {
 			this.remove();
 		}, this.duration);
 	}
