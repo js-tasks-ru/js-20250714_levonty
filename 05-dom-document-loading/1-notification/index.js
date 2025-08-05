@@ -21,7 +21,7 @@ export default class NotificationMessage {
 	
 	msgTemplate() {
 		return `
-			<div class="notification ${this.type}" style="--value:${this.duration/1000}s">
+			<div class="notification ${this.type}" style="--value:${this.duration}ms">
 				<div class="timer"></div>
 				<div class="inner-wrapper">
 				  <div class="notification-header">${this.type}</div>
