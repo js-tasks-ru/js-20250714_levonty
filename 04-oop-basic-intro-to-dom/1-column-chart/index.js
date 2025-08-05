@@ -6,28 +6,28 @@ export default class ColumnChart {
 	constructor (props = {}) {
 		
 		
-		const {
-			data = [], 
-			label = '', 
-			value = 0, 
-			link = '',
-			formatHeading = (value)=> value,
-		} = props;
+	  const {
+	    data = [], 
+	    label = '', 
+	    value = 0, 
+	    link = '',
+	    formatHeading = (value)=> value,
+	  } = props;
 		
 
-		this.data = data;
-		this.label = label;
-		this.value = value;
-		this.link = link;
-		this.formatHeading = formatHeading;
+	  this.data = data;
+	  this.label = label;
+	  this.value = value;
+	  this.link = link;
+	  this.formatHeading = formatHeading;
 		
 		
-		this.element = this.createElement();
+	  this.element = this.createElement();
 		
 	}
 	
-		createTemplate() {
-			return `
+	createTemplate() {
+	  return `
 				<div class="column-chart" style="--chart-height: 50">
 					  <div class="column-chart__title">
 						${this.label}
@@ -41,52 +41,52 @@ export default class ColumnChart {
 					  </div>
 					</div>			
 			`;
-		}
+	}
 		
-		createTemplateLink() {
-			if (this.link) {
-				return `<a class="column-chart__link" href="${this.link}">View all</a>`
-			}
-			return '';
-		}
+	createTemplateLink() {
+	  if (this.link) {
+	    return `<a class="column-chart__link" href="${this.link}">View all</a>`;
+	  }
+	  return '';
+	}
 		
-		createChartTemplate() {
-			return this.getColumnProps(this.data).map(({value, percent})=>(`<div style="--value: ${value}" data-tooltip="${percent}"></div>`)).join('');
-		}
+	createChartTemplate() {
+	  return this.getColumnProps(this.data).map(({value, percent})=>(`<div style="--value: ${value}" data-tooltip="${percent}"></div>`)).join('');
+	}
 
-		getColumnProps(data) {
+	getColumnProps(data) {
 		  const maxValue = Math.max(...data);
 		  const scale = 50 / maxValue;
 
 		  return data.map(item => {
-			return {
+	    return {
 			  percent: (item / maxValue * 100).toFixed(0) + '%',
 			  value: String(Math.floor(item * scale))
-			};
+	    };
 		  });
-		}		
+	}		
 		
-		createElement() {
-			const element = document.createElement('div');
+	createElement() {
+	  const element = document.createElement('div');
 			
-			element.innerHTML = this.createTemplate();
-			const firstElementChild = element.firstElementChild;
+	  element.innerHTML = this.createTemplate();
+	  const firstElementChild = element.firstElementChild;
 			
-			firstElementChild.classList.add('column-chart_loading');
+	  firstElementChild.classList.add('column-chart_loading');
 			
-			return firstElementChild;
-		}
+	  return firstElementChild;
+	}
 
-		destroy() {
-			this.remove();
-		}
+	destroy() {
+	  this.remove();
+	}
 		
-		remove() {
-			this.element.remove();
-		}
+	remove() {
+	  this.element.remove();
+	}
 		
-		update(newData) {
-			this.data = newData;
-			this.element.innerHTML = this.createTemplate();
-		}
+	update(newData) {
+	  this.data = newData;
+	  this.element.innerHTML = this.createTemplate();
+	}
 }

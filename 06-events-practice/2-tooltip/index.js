@@ -13,7 +13,7 @@ class Tooltip {
   initialize() {
     document.addEventListener('pointerover', (event) => {
       const curTooltip = event.target.closest('[data-tooltip]');
-      if (curTooltip) this.showTooltip(curTooltip, event);
+      if (curTooltip) {this.showTooltip(curTooltip, event);}
     });
   }
 
@@ -33,14 +33,14 @@ class Tooltip {
   }
 
   moveTooltip = (event) => {
-    if (!this.element) return;
+    if (!this.element) {return;}
     this.element.style.left = `${event.clientX}px`;
     this.element.style.top = `${event.clientY}px`;
   };
 
   removeTooltip = (event) => {
-    if (!this.element) return;
-	if (!event.target) return;
+    if (!this.element) {return;}
+    if (!event.target) {return;}
     
     event.target.removeEventListener('pointermove', this.moveTooltip);
     event.target.removeEventListener('pointerout', this.removeTooltip);
