@@ -1,12 +1,12 @@
 export default class SortableTable {
   constructor(headerConfig = [], data = []) {
-	this.header = headerConfig;
-	this.data = data;
-	this.element = this.createTableElement();
-	this.subElements = {
-		body: this.element.querySelector('[data-element="body"]'),
-		header: this.element.querySelector('[data-element="header"]')
-	};
+    this.header = headerConfig;
+    this.data = data;
+    this.element = this.createTableElement();
+    this.subElements = {
+      body: this.element.querySelector('[data-element="body"]'),
+      header: this.element.querySelector('[data-element="header"]')
+    };
 
   }
  
@@ -26,27 +26,27 @@ export default class SortableTable {
   
   
   
-	createRowElement(item) {
+  createRowElement(item) {
 	  
-		const row = this.header.map(col => this.createCellElement(item,col)).join('');
-		return `<a href="#" class="sortable-table__row">${row}</a>`;
-	}
+    const row = this.header.map(col => this.createCellElement(item, col)).join('');
+    return `<a href="#" class="sortable-table__row">${row}</a>`;
+  }
 
   
-	createCellElement(item, column) {
-		//console.log(typeof item[column['id']]);
+  createCellElement(item, column) {
+    //console.log(typeof item[column['id']]);
 		
-		if (typeof item[column['id']]==='object') return `
+    if (typeof item[column['id']] === 'object') {return `
           <div class="sortable-table__cell">
             <img class="sortable-table-image" alt="Image" src="${this.data[0]?.url || 'https://via.placeholder.com/32'}">
           </div>
-        `;
-		return `<div class="sortable-table__cell">${item[column['id']]}</div>`;
-	}
+        `;}
+    return `<div class="sortable-table__cell">${item[column['id']]}</div>`;
+  }
   
-	createTableElement() {
+  createTableElement() {
 		
-		const tableWrapper = `<div data-element="productsContainer" class="products-list__container">
+    const tableWrapper = `<div data-element="productsContainer" class="products-list__container">
 								<div class="sortable-table">
 									${this.createTableHeaderElement()}
 									<div data-element="body" class="sortable-table__body">${this.createTableBodyElement()}</div>
@@ -61,30 +61,30 @@ export default class SortableTable {
 									</div>	
 								</div>
 							</div>`;
-		const table = document.createElement('tbl');
+    const table = document.createElement('tbl');
 			
-		table.innerHTML = tableWrapper;
-		return table.firstElementChild;		
+    table.innerHTML = tableWrapper;
+    return table.firstElementChild;		
 		
-	}
+  }
 	
-	sort(field, order) {
+  sort(field, order) {
 	  let sortType = null;
 	  let sorted;
-	  let sortDir = order=='asc' ? 1 : -1;
+	  let sortDir = order == 'asc' ? 1 : -1;
 
 	  for (let obj of this.header) {
-		  if (obj['id']==field) {
+		  if (obj['id'] == field) {
 
 			  sortType = obj['sortType'];
 			  if (sortType == 'number') {
-				  this.data.sort((rowA, rowB)=>sortDir * (Number(rowA[field])-Number(rowB[field])));
+				  this.data.sort((rowA, rowB)=>sortDir * (Number(rowA[field]) - Number(rowB[field])));
 			  } else if (sortType == 'string') {
 				 this.data.sort((rowA, rowB)=>sortDir * (rowA[field].localeCompare(rowB[field], ["ru", "en"], 
 					  { 
-						sensitivity: "case", // Учитывать регистр
-						caseFirst: "upper",  // Сначала заглавные буквы
-						numeric: true        // Для числовых строк (опционально)
+              sensitivity: "case", // Учитывать регистр
+              caseFirst: "upper", // Сначала заглавные буквы
+              numeric: true // Для числовых строк (опционально)
 					  }))); 
 			  }
 			  break;
@@ -97,7 +97,7 @@ export default class SortableTable {
 	  
   }	
   
-    destroy() {
+  destroy() {
 	  this.element.remove();
   }
   
