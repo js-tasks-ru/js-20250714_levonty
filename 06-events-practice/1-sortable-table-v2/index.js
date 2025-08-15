@@ -33,7 +33,8 @@ export default class SortableTable {
 
 		return {
 			id: headerCell.dataset.id, 
-			order: headerCell.dataset.order = (headerCell.dataset.order==='' || headerCell.dataset.order==='desc') ? 'asc': 'desc'};
+			order: headerCell.dataset.order = 
+  headerCell.dataset.order === 'asc' ? 'desc' : 'asc'};
   }
   
  setSorting = ({id, order	}) => {
