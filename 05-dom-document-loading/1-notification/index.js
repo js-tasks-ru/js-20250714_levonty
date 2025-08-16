@@ -38,11 +38,8 @@ export default class NotificationMessage {
 	}
 	
 	destroy() {
-	  this.remove();
 	  clearTimeout(this.timerId);
-	  if (NotificationMessage.activeNotification === this) {
-		  NotificationMessage.activeNotification = null;
-	  }
+	  this.remove();
 	}
 	
 	checkMsgType(type) {

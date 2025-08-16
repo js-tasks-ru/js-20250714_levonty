@@ -11,12 +11,48 @@ class Tooltip {
   }
 
   initialize() {
-    document.addEventListener('pointerover', (event) => {
-      const curTooltip = event.target.closest('[data-tooltip]');
-      if (curTooltip) {this.showTooltip(curTooltip, event);}
-    });
+	
+	document.addEventListener('pointerover',this.handlePointerover);
+	document.addEventListener('pointermove',this.handlePointermove);
+	document.addEventListener('pointerout',this.handlePointerout);
   }
+  
+  handlePointerover = (event) => {
+	  const curTooltip = event.target.closest('[data-tooltip]');
 
+	  if (curTooltip) {
+		  this.showTooltip(event);
+	  }
+  }
+  
+  handlePointermove = (event) => {
+	const curTooltip = event.target.closest('[data-tooltip]');
+    if (!curTooltip) return;
+	if (!this.element) {return;}
+	this.element.style.left = `${event.clientX + 10}px`;
+	this.element.style.top = `${event.clientY + 10}px`;	  
+  }
+  
+  handlePointerout = (event) => {
+    if (!this.element) {return;}
+    if (!event.target) {return;}
+	
+    this.element.remove();
+    this.element = null;
+  };  
+  
+  showTooltip = (event)=>{
+
+	if (this.element) {
+		this.removeTooltip(event);
+	}
+	
+	const curTooltip = event.target.closest('[data-tooltip]');
+    if (!curTooltip) return;
+    this.createTooltip(curTooltip.dataset.tooltip);
+	  
+  }
+  
   render(strTooltip) {
     if (!this.element) {
       this.createTooltip(strTooltip);
@@ -32,42 +68,13 @@ class Tooltip {
     document.body.append(this.element);
   }
 
-  moveTooltip = (event) => {
-    if (!this.element) {return;}
-    this.element.style.left = `${event.clientX}px`;
-    this.element.style.top = `${event.clientY}px`;
-  };
-
-  removeTooltip = (event) => {
-    if (!this.element) {return;}
-    if (!event.target) {return;}
-    
-    event.target.removeEventListener('pointermove', this.moveTooltip);
-    event.target.removeEventListener('pointerout', this.removeTooltip);
-    
-    this.element.remove();
-    this.element = null;
-    this.currentTarget = null;
-  };
-
-  showTooltip = (curTooltip, event) => {
-    if (this.element) {
-      this.removeTooltip(event);
-    }
-    
-    this.currentTarget = curTooltip;
-    this.createTooltip(curTooltip.dataset.tooltip);
-    this.moveTooltip(event);
-    
-    curTooltip.addEventListener('pointermove', this.moveTooltip);
-    curTooltip.addEventListener('pointerout', this.removeTooltip);
-  };
 
   destroy() {
-    if (this.element) {
-      this.removeTooltip({ target: this.currentTarget });
-    }
-    Tooltip.#instance = null;
+	this.element = null;
+	document.removeEventListener('pointerover',this.handlePointerover);
+	document.removeEventListener('pointermove',this.handlePointermove);
+	document.removeEventListener('pointerout',this.handlePointerout);	
+	Tooltip.#instance = null;
   }
 }
 

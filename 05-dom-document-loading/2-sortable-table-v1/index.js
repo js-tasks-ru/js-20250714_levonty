@@ -34,7 +34,6 @@ export default class SortableTable {
 
   
   createCellElement(item, column) {
-    //console.log(typeof item[column['id']]);
 		
     if (typeof item[column['id']] === 'object') {return `
           <div class="sortable-table__cell">

@@ -1,7 +1,3 @@
-/*
-- как быть с выводом изображений, когда в index.spec.js таблица без них, а в index.html с картинками?
-*/
-
 export default class SortableTable {
   constructor(headerConfig = [], { 
 	data = [], 
@@ -18,7 +14,6 @@ export default class SortableTable {
       header: this.element.querySelector('[data-element="header"]')
     };	
 
-	//if (this.sorted['id'] && this.sorted['order']) this.setSorting(this.sorted['id'],this.sorted['order']);
 	if (this.sorted['id'] && this.sorted['order']) this.setSorting({id: this.sorted['id'], order: this.sorted['order']});
 
 	this.subElements.header.addEventListener('click',(event)=>this.setSorting(this.defineSortColumn(event)));
@@ -29,7 +24,6 @@ export default class SortableTable {
 	  const headerCell = event.target.closest('.sortable-table__cell');
 	  if (!headerCell) return;
 	  if (headerCell.dataset.sortable!='true') return {};	 
-		//console.log('32headerCell.dataset.order',headerCell.dataset.order);
 
 		return {
 			id: headerCell.dataset.id, 
@@ -39,8 +33,7 @@ export default class SortableTable {
   
  setSorting = ({id, order	}) => {
 
-	//console.log('order',order);
-	 if (!id || !order) return;//'[data-element="body"]'
+	 if (!id || !order) return
 	 const headerCell = this.subElements.header.querySelector(`[data-id="${id}"]`); 
 
 	 if (!headerCell) return;
@@ -57,7 +50,6 @@ export default class SortableTable {
 	  headerCell.append(arrowElement);
 	  	  
 	  this.sort(id, order); 
-	  //headerCell.dataset.order =  (order ==='' || order ==='desc')  ? 'asc' : 'desc';
 	  headerCell.dataset.order =  order;
  }
  
@@ -122,15 +114,6 @@ export default class SortableTable {
 	
   sort(field, order) {
 	  
-	  /*
-	  if (this.isSortLocally) {
-		this.sortOnClient();
-	  } else {
-		this.sortOnServer();
-	  }
-	  */
-	  //console.log('field',field);
-	  //console.log('order',order);
 	  let sortType = null;
 	  let sorted;
 	  let sortDir = order === 'asc' ? 1 : -1;
