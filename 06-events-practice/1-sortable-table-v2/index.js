@@ -16,24 +16,38 @@ export default class SortableTable {
 
 	if (this.sorted['id'] && this.sorted['order']) this.setSorting({id: this.sorted['id'], order: this.sorted['order']});
 
-	this.subElements.header.addEventListener('click',(event)=>this.setSorting(this.defineSortColumn(event)));
+	this.handleTheaderClick = this.handleTheaderClick.bind(this);
+	this.subElements.header.addEventListener('pointerdown',this.handleTheaderClick); //*
 	
   }
   
-  defineSortColumn(event){
-	  const headerCell = event.target.closest('.sortable-table__cell');
-	  if (!headerCell) return;
-	  if (headerCell.dataset.sortable!='true') return {};	 
-
-		return {
-			id: headerCell.dataset.id, 
-			order: headerCell.dataset.order = 
-  headerCell.dataset.order === 'asc' ? 'desc' : 'asc'};
+  handleTheaderClick(event) {
+	  const sortParams = this.defineSortColumn(event);
+	  if (sortParams) {
+			this.setSorting(sortParams);
+	  }
   }
   
- setSorting = ({id, order	}) => {
+  defineSortColumn(event){
+
+	  const headerCell = event.target.closest('.sortable-table__cell');
+	  if (!headerCell) return;
+	  if (headerCell.dataset.sortable!=='true') return {};
+
+	  
+	  const order = headerCell.dataset.order ===  'desc' ? 'asc' : 'desc';
+	  headerCell.dataset.order = order;
+	  
+		return {
+			id: headerCell.dataset.id, 
+			order
+		}
+  }
+  
+ setSorting = ({id, order}) => {
 
 	 if (!id || !order) return
+
 	 const headerCell = this.subElements.header.querySelector(`[data-id="${id}"]`); 
 
 	 if (!headerCell) return;
@@ -147,6 +161,7 @@ export default class SortableTable {
   }	
   
   destroy() {
+	  this.subElements.header.removeEventListener('pointerdown',this.handleTheaderClick);
 	  this.element.remove();
   }
   
