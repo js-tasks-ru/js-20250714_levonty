@@ -49,23 +49,28 @@ class Tooltip {
 	
 	const curTooltip = event.target.closest('[data-tooltip]');
     if (!curTooltip) return;
-    this.createTooltip(curTooltip.dataset.tooltip);
+    this.createTooltip(curTooltip.dataset.tooltip,event);
 	  
   }
   
-  render(strTooltip) {
+  render(strTooltip, event) {
     if (!this.element) {
-      this.createTooltip(strTooltip);
+      this.createTooltip(strTooltip, event = null);
     } else {
       this.element.textContent = strTooltip;
     }
   }
 
-  createTooltip(strTooltip = '') {
+  createTooltip(strTooltip = '', event = null) {
     this.element = document.createElement('div');
     this.element.className = 'tooltip';
     this.element.textContent = strTooltip;
     document.body.append(this.element);
+	
+	if (event) {
+		this.element.style.left = `${event.clientX + 10}px`;
+		this.element.style.top = `${event.clientY + 10}px`;	
+	}
   }
 
 
