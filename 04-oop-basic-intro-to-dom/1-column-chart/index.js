@@ -72,7 +72,7 @@ export default class ColumnChart {
 	  element.innerHTML = this.createTemplate();
 	  const firstElementChild = element.firstElementChild;
 			
-	  firstElementChild.classList.add('column-chart_loading');
+	  if(this.data.length==0) firstElementChild.classList.add('column-chart_loading');
 			
 	  return firstElementChild;
 	}
