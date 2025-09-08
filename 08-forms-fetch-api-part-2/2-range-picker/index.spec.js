@@ -48,16 +48,18 @@ describe('forms-fetch-api-part-2/range-picker', () => {
   });
 
   it('should be closed on second click', function() {
+
     const input = rangePicker.element.querySelector('.rangepicker__input');
+		console.log('before',input.parentElement.classList.toString());
 
     input.dispatchEvent(new MouseEvent('click', {
       bubbles: true
     }));
-
+		console.log('after 1',input.parentElement.classList.toString());
     input.dispatchEvent(new MouseEvent('click', {
       bubbles: true
     }));
-
+		console.log('after 2',input.parentElement.classList.toString());
     expect(rangePicker.element.classList).not.toContain('rangepicker_open');
   });
 
@@ -144,6 +146,7 @@ describe('forms-fetch-api-part-2/range-picker', () => {
 
     from = rangePicker.element.querySelector('.rangepicker__selected-from');
     const to = rangePicker.element.querySelector('.rangepicker__selected-to');
+
 
     expect(from.textContent.trim()).toEqual('1');
     expect(to.textContent.trim()).toEqual('3');
@@ -240,6 +243,7 @@ describe('forms-fetch-api-part-2/range-picker', () => {
     // check selection after second opening
     expect(from.textContent.trim()).toEqual('1');
     expect(to.textContent.trim()).toEqual('30');
+
   });
 
   it('should have ability to select dates range bigger than two months', () => {
@@ -348,6 +352,7 @@ describe('forms-fetch-api-part-2/range-picker', () => {
     const input = rangePicker.element.querySelector('.rangepicker__input');
     const selector = rangePicker.element.querySelector('.rangepicker__selector');
 
+		
     // open date picker
     input.dispatchEvent(new MouseEvent('click', {
       bubbles: true
@@ -356,6 +361,7 @@ describe('forms-fetch-api-part-2/range-picker', () => {
     const [firstCalendar] = selector.querySelectorAll('.rangepicker__calendar');
     const firstDateGrid = firstCalendar.querySelector('.rangepicker__date-grid');
     const firstDate = firstDateGrid.firstElementChild;
+
 
     // change "from" date to "01.10.2019"
     firstDate.dispatchEvent(new MouseEvent('click', { bubbles: true }));
